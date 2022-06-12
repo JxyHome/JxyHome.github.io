@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>使代码更简洁(二)---集合转换相关 | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="以前在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和集合转换相关的吧。。。。。会持续记录。。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使代码更简洁(二)---集合转换相关">
+<meta property="og:url" content="http://yemengying.com/2015/09/11/cleancode-collection/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="以前在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和集合转换相关的吧。。。。。会持续记录。。。。">
+<meta property="og:image" content="http://yemengying.com/images/thumbnail2.jpg">
+<meta property="og:updated_time" content="2017-06-10T07:56:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使代码更简洁(二)---集合转换相关">
+<meta name="twitter:description" content="以前在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和集合转换相关的吧。。。。。会持续记录。。。。">
+<meta name="twitter:image" content="http://yemengying.com/images/thumbnail2.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2015/09/11/cleancode-collection/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            使代码更简洁(二)---集合转换相关
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/09/11/cleancode-collection/">
+            <time datetime="2015-09-11T06:34:33.000Z" itemprop="datePublished">2015-09-11</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/list/">list</a>, <a class="tag-link" href="/tags/map/">map</a>, <a class="tag-link" href="/tags/stream/">stream</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#list转map"><span class="toc-number">1.</span> <span class="toc-text">list转map</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#list-lt-T-gt-转map-lt-K-List-lt-V-gt-gt"><span class="toc-number">2.</span> <span class="toc-text">list< T >转map< K,List< V>></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-利用stream"><span class="toc-number">2.0.1.</span> <span class="toc-text">1.利用stream</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-普通方法"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.普通方法</span></a></li></ol></li></ol></li></ol>
+                </div>
+            
+            <p>以前在segmentFault上的一篇文章 搬移到这里。</p>
+<blockquote>
+<p>记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和集合转换相关的吧。。。。。会持续记录。。。。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="list转map"><a href="#list转map" class="headerlink" title="list转map"></a>list转map</h2><p>   开发过程中经常会碰到需要将list转为map的情况，例如有一个User类，有id,name,age等属性。有一个User的list，为了很方便的获取指定id的User，这时就需要将List&lt; User&gt;转换为Map<integer,user>，其中map的key是User的id。<br>一般的做法，是通过for循环将list中的元素put到map中，代码如下：</integer,user></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Map&lt;Integer, User&gt; map = <span class="keyword">new</span> HashMap&lt;Integer, User&gt;();</div><div class="line"><span class="keyword">for</span>(User user : userList)&#123;</div><div class="line">	map.put(user.getId(), user);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样做，在每个需要将list转为map的地方，都要写一遍for循环，代码不够简洁，所以利用stream和泛型封装了一个通用的工具方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransFormUtils</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 将list转为map</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> predicate1  key</div><div class="line">	 * <span class="doctag">@param</span> predicate2  value</div><div class="line">	 * <span class="doctag">@return</span></div><div class="line">	 */</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span>&lt;K,V,T&gt;  Map&lt;K, V&gt; <span class="title">transformToMap</span><span class="params">(List&lt;T&gt; list,Function&lt;T, K&gt; predicate1, Function&lt;T,V&gt; predicate2)</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> list.stream().collect(Collectors.toMap(predicate1, predicate2));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样如果需要将List&lt; User&gt;转为Map<integer,user>代码如下</integer,user></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//省略list构造过程</span></div><div class="line">Map&lt;Integer, User&gt; map = TransFormUtils.transformToMap(userList, p-&gt;p.getId(), p-&gt;p);</div></pre></td></tr></table></figure>
+<p>如果需要将List&lt; User&gt;转为Map<integer,string(用户名)>代码如下</integer,string(用户名)></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//省略list构造过程</span></div><div class="line">Map&lt;Integer, String&gt; map2 = TransFormUtils.transformToMap(userList, p-&gt;p.getId(), p-&gt;p.getName());</div></pre></td></tr></table></figure>
+<p>应用封装好的工具类 只需要一行代码就可以完成list到map的转换，程序简单了许多~~</p>
+<h2 id="list-lt-T-gt-转map-lt-K-List-lt-V-gt-gt"><a href="#list-lt-T-gt-转map-lt-K-List-lt-V-gt-gt" class="headerlink" title="list&lt; T &gt;转map&lt; K,List&lt; V&gt;&gt;"></a>list&lt; T &gt;转map&lt; K,List&lt; V&gt;&gt;</h2><p>将开发中经常需要根据list中的某个属性将list分类。举个例子，在开发通知中心时需要给用户推送消息，安卓和ios是调用的不同的第三方库，所以要根据设备的类型调用不同的方法。首先根据要推送的用户Id列表获得List&lt; DeviceUser&gt;,DeviceUser类的属性包括devicetype,deviceId,userId,userName,createAt等。接着要获得deviceType是ios的deviceId列表，deviceType是安卓的deviceId列表。即将List&lt; DeviceUser&gt;转为Map&lt; Integer,List&lt; String&gt;&gt;，其中map的key是deviceType，value是deviceId的list。<br>为了解决这个问题，写了一个通用的工具类。</p>
+<h4 id="1-利用stream"><a href="#1-利用stream" class="headerlink" title="1.利用stream"></a>1.利用stream</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransFormUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 将list&lt;T&gt;转为Map&lt;K,List&lt;V&gt;&gt;</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> predicate1 map中的key</div><div class="line">	 * <span class="doctag">@param</span> predicate2 map中的list的元素</div><div class="line">	 * <span class="doctag">@return</span></div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;K,V,T&gt; Map&lt;K, List&lt;V&gt;&gt; transformToMapList(List&lt;T&gt; list, Function&lt;T, K&gt; predicate1, Function&lt;T,V&gt; predicate2)&#123;</div><div class="line">		<span class="keyword">return</span> list.stream().collect(</div><div class="line">				Collectors.groupingBy(predicate1, </div><div class="line">                Collectors.mapping(predicate2, </div><div class="line">                        Collectors.toList())));</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">List&lt;DeviceUser&gt; list = <span class="keyword">new</span> ArrayList&lt;DeviceUser&gt;();</div><div class="line"><span class="comment">//省略list的构造</span></div><div class="line">Map&lt;Integer, List&lt;String&gt;&gt; deviceMap = TransFormUtils.transformToMapList(list, p-&gt;p.getDeviceType(), p-&gt;p.getDeviceId());</div></pre></td></tr></table></figure>
+<h4 id="2-普通方法"><a href="#2-普通方法" class="headerlink" title="2.普通方法"></a>2.普通方法</h4><p>同事也写了一个另一个工具类,这种方法定义了一个新的数据结构，直接使用MapList代替Map</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Map&amp;List组合数据结构</div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> jianming.zhou</div><div class="line"> *</div><div class="line"> * <span class="doctag">@param</span> &lt;K&gt;</div><div class="line"> * <span class="doctag">@param</span> &lt;V&gt;</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapList</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">	<span class="keyword">private</span> Map&lt;K, List&lt;V&gt;&gt; map = <span class="keyword">new</span> HashMap&lt;K, List&lt;V&gt;&gt;();</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> List&lt;V&gt; <span class="title">get</span><span class="params">(K k)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> map.get(k);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(K k, V v)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (map.containsKey(k)) &#123;</div><div class="line">			map.get(k).add(v);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			List&lt;V&gt; list = <span class="keyword">new</span> ArrayList&lt;V&gt;();</div><div class="line">			list.add(v);</div><div class="line">			map.put(k, list);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> Set&lt;K&gt; <span class="title">keySet</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> map.keySet();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用如下<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">List&lt;DeviceUser&gt; list = <span class="keyword">new</span> ArrayList&lt;DeviceUser&gt;();</div><div class="line"><span class="comment">//省略list的构造</span></div><div class="line">MapList&lt;Integer, String&gt; deviceMap = <span class="keyword">new</span> MapList&lt;Integer,String&gt;();</div><div class="line"><span class="keyword">for</span>(DeviceUser device : list)&#123;</div><div class="line"> deviceMap.put(device.getDeviceType(),device.getDeviceId());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还是喜欢第一种哈哈哈哈哈哈~~<br>题外话：既然对现状不满意 就尝试改变吧 虽然有可能进入另一个坑~~</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2015/09/11/cleancode-collection/" data-id="cjtvbuchm000tz15szon7l8sf" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2015/09/11/cleancode-collection/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2015/09/11/cleancode-collection/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/09/12/spring-transaction/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    spring事务管理总结
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/09/10/使代码更简洁-一-List相关/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">使代码更简洁(一)---List相关</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

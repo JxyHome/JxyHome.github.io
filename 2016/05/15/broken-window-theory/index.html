@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>谈谈破窗理论 | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在湾区日报上看到篇关于破窗理论(Broken Window Theory)的文章，真是颇有感触，所以决定写篇博客，结合这几个月开发代理商网站的心(keng)路(die)历程,谈谈为何不能忽视一点点糟糕的代码或者不好的设计。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈破窗理论">
+<meta property="og:url" content="http://yemengying.com/2016/05/15/broken-window-theory/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="在湾区日报上看到篇关于破窗理论(Broken Window Theory)的文章，真是颇有感触，所以决定写篇博客，结合这几个月开发代理商网站的心(keng)路(die)历程,谈谈为何不能忽视一点点糟糕的代码或者不好的设计。">
+<meta property="og:image" content="https://pic.yupoo.com/jiananshi/66d1a752/675f9451.jpg">
+<meta property="og:updated_time" content="2018-12-13T07:58:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈破窗理论">
+<meta name="twitter:description" content="在湾区日报上看到篇关于破窗理论(Broken Window Theory)的文章，真是颇有感触，所以决定写篇博客，结合这几个月开发代理商网站的心(keng)路(die)历程,谈谈为何不能忽视一点点糟糕的代码或者不好的设计。">
+<meta name="twitter:image" content="https://pic.yupoo.com/jiananshi/66d1a752/675f9451.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2016/05/15/broken-window-theory/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            谈谈破窗理论
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/05/15/broken-window-theory/">
+            <time datetime="2016-05-15T06:02:14.000Z" itemprop="datePublished">2016-05-15</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/随笔/">随笔</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/随笔/">随笔</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#破窗理论"><span class="toc-number">1.</span> <span class="toc-text">破窗理论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#亲身感受"><span class="toc-number">2.</span> <span class="toc-text">亲身感受</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+                </div>
+            
+            <blockquote>
+<p>在湾区日报上看到篇关于破窗理论(Broken Window Theory)的<a href="http://blog.codinghorror.com/the-broken-window-theory/?utm_source=wanqu.co&amp;utm_campaign=Wanqu+Daily&amp;utm_medium=ios" target="_blank" rel="external">文章</a>，真是颇有感触，所以决定写篇博客，结合这几个月开发代理商网站的心(keng)路(die)历程,谈谈为何不能忽视一点点糟糕的代码或者不好的设计。</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="破窗理论"><a href="#破窗理论" class="headerlink" title="破窗理论"></a>破窗理论</h3><p>先简单解释下什么是“破窗理论”，“破窗理论”是指：如果有人打坏了一幢建筑物的窗户玻璃，而这扇窗户又得不到及时的维修，别人就可能受到某些暗示性的纵容去打烂更多的窗户。<br><img src="https://pic.yupoo.com/jiananshi/66d1a752/675f9451.jpg" alt="破窗理论"><br>湾区日报上的文章中是这样描述破窗理论的：</p>
+<blockquote>
+<p>Don’t leave “broken windows” (bad designs, wrong decisions, or poor code) unrepaired. Fix each one as soon as it is discovered. If there is insufficient time to fix it properly, then board it up. Perhaps you can comment out the offending code, or display a “Not Implemented” message, or substitute dummy data instead. Take some action to prevent further damage and to show that you’re on top of the situation.<br>We’ve seen clean, functional systems deteriorate pretty quickly once windows start breaking. There are other factors that can contribute to software rot, and we’ll touch on some of them elsewhere, but neglect accelerates the rot faster than any other factor.</p>
+</blockquote>
+<p>简单翻译一下就是：</p>
+<blockquote>
+<p>不要放任“破窗户”(不好的设计，错误的决定或糟糕的代码)不管。要尽量在发现时立刻修复。如果没有足够的时间进行适当的修复，就先把它保留起来。可以把出问题的代码放到注释中，或是显示“未实现”消息，也可用虚拟数据加以替代。总之，要采取一些措施，防止进一步的恶化。表明局势尚在掌控之中。有许多整洁良好的系统在出现“破窗”之后立马崩溃。虽然促使软件崩溃的原因还有其他因素（我们将在其他地方接触到），但对“破窗”置之不理，肯定会更快地加速系统崩溃。</p>
+</blockquote>
+<h3 id="亲身感受"><a href="#亲身感受" class="headerlink" title="亲身感受"></a>亲身感受</h3><p>先说说背景，故事要从三个月前开始讲起了，当时刚刚转去搜索组做部门内部的搜索，组内总共3个人。本以为可以远离业务代码，专心技术，可万万没想到Elasticsearch的书还没焐热就被部门leader叫去开会，说要做一个代理商系统，很紧急，是公司P0级别的项目，全公司的资源都要给我们让路(事实证明只是画饼，因为现在连一个固定前端都没了)。其实这个项目一听就是个深坑，从头发到脚都是拒绝的。因为主数据（餐厅，活动，订单）全在别的部门，85%的功能都依赖于其他部门的接口(si不si很神奇)，所以做这个项目主要工作就是。。。。。通过SOA或者Thrift调别人的接口。不过即便知道是坑也没办法，只有搜索组刚刚成立比较闲，只能我们做-_-|||。当时部门leader的要求是封闭开发一周半，拿出个可用的版本就行，一定要快！！。所以我们搜索组的三个人加上从别的组借调的两个实习生再加上两个前端就搬去了小黑屋，开始了近两周的封闭开发。</p>
+<p>好了，背景聊完了，进入正题，聊聊代理商是怎么变得越来越难维护的。代理商的开发leader是个搜索大牛，但没做过Web开发，对Java Web开发并不是十分了解。因为部门leader要求快快快，所以将许多必要的步骤省略了。比如定义方法参数命名规范，定义api规范，代码review等等。。。每天就是划分下接口，每人开发几个接口，和前端定义接口文档，就开始开发提测了。讲真，其实所有人都是有责任的，可能是对这个项目一开始就很反感，有抵触心理，所以从内心就没打算好好做，一些觉得可以改进的地方也就得过且过了。后面的事实证明，当觉得设计或规范有不合理的时候，一定要及时提出来，不能忍，忍的后果就是一次一次降低自己的底线，然后亲手造就一个难维护的系统，到时候即便有心想重构也是心有余力不足了。</p>
+<p>公司项目就不贴实际代码了，简单举几个例子，看看开发前定义必要的规范是多么的重要。由于代理商没有事先规定api的定义要符合RESTFul的规范，所以项目中api的风格有两种，符合RESTFul的和不符合的。比如获取餐厅信息的api定义是<code>GET /restaurant/{id}</code>，而创建餐厅的api定义是<code>POST /restaurant/create</code>，so。。。如果后面的人想设计更新餐厅信息的api是<code>PUT /restaurant/{id}</code>还是<code>PUT /restaurant/update</code>呢，真是一脸懵逼。接口的命名就更是五花八门了，因为大家是来自不同组，而且也没有定义统一的命名的规范，比如：一个简单的获取信息，获取餐厅信息的接口是<code>getRestaurant</code>,获取活动信息是<code>activityInfo</code>,获取代理商信息接口是<code>getAgentDto</code>，获取订单信息又变成了<code>getOrderData</code>,so。。。谁能告诉我之后想添加个获取信息的接口到底该叫什么。。。估计只能看当时的心情随便取了。。。还有就是项目中存在大量重复代码，获取餐厅管理员信息基本上每个人都写了一遍，因为管理员的信息在获取餐厅，活动信息时都用的到，由于没有代码review，所以一开始大家也不知道，就各写各的，也是蛮醉的。</p>
+<p>上面的例子只是一点点，实际还有很多很多很多的槽点，都是泪啊。由于第一版本为了压缩工时(至今也不明白为啥要那么急。。。)就这样草草交工，导致后面的几个迭代开发也随之变得越来越随意，随意命名，随意定义api，缺乏junit测试，越来越不上心。听说代理商要移交给BD组，但估计情况也只会越来越糟，因为没人愿意去整理一坨坨糟糕的代码，只会在出现问题的时候，随意的打补丁。。。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>其实也没啥好总结的，一句话，以后一定要写干净，整洁的代码，注意规范，不能忽视一点点糟糕的代码或者设计对项目带来的负面影响。</p>
+<blockquote>
+<p>欢迎一起讨论~~</p>
+</blockquote>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2016/05/15/broken-window-theory/" data-id="cjtvbuchc000iz15sd2v5rif0" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2016/05/15/broken-window-theory/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2016/05/15/broken-window-theory/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/05/24/mysql-tuning/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    MySQL调优
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/05/13/jvm-GC/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">【译】Java中的垃圾回收机制</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

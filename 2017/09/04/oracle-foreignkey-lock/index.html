@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>Oracle 中的外键与锁 | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="算是接上篇吧。。。 内容主要来自 Oracle 官方文档，自己重新画了下图。图中配色来自大神 draveness 的文章，小清新的配色真是美美哒。看来我在学画图的路上还要修炼很久啊。。。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle 中的外键与锁">
+<meta property="og:url" content="http://yemengying.com/2017/09/04/oracle-foreignkey-lock/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="算是接上篇吧。。。 内容主要来自 Oracle 官方文档，自己重新画了下图。图中配色来自大神 draveness 的文章，小清新的配色真是美美哒。看来我在学画图的路上还要修炼很久啊。。。。。">
+<meta property="og:image" content="https://pic.yupoo.com/jiananshi/2ee4d87f/a5d4acb9.png">
+<meta property="og:updated_time" content="2018-12-13T03:49:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle 中的外键与锁">
+<meta name="twitter:description" content="算是接上篇吧。。。 内容主要来自 Oracle 官方文档，自己重新画了下图。图中配色来自大神 draveness 的文章，小清新的配色真是美美哒。看来我在学画图的路上还要修炼很久啊。。。。。">
+<meta name="twitter:image" content="https://pic.yupoo.com/jiananshi/2ee4d87f/a5d4acb9.png">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2017/09/04/oracle-foreignkey-lock/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Oracle 中的外键与锁
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/09/04/oracle-foreignkey-lock/">
+            <time datetime="2017-09-04T10:31:07.000Z" itemprop="datePublished">2017-09-04</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Oracle/">Oracle</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Oracle/">Oracle</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#未加索引的外键与锁"><span class="toc-number">1.</span> <span class="toc-text">未加索引的外键与锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#加索引的外键与锁"><span class="toc-number">2.</span> <span class="toc-text">加索引的外键与锁</span></a></li></ol>
+                </div>
+            
+            <blockquote>
+<p>算是接上篇吧。。。 内容主要来自 Oracle 官方文档，自己重新画了下图。图中配色来自大神 draveness 的<a href="http://draveness.me/mysql-innodb.html" target="_blank" rel="external">文章</a>，小清新的配色真是美美哒。看来我在学画图的路上还要修炼很久啊。。。。。  </p>
+</blockquote>
+<a id="more"></a>
+<p>锁是一种可以防止多个事务错误的更新共享数据的机制，在维护数据库并发性和一致性方面起着关键的作用。在 Oracle 堆组织表中， 数据库锁的行为与外键列是否有索引有关。如果外键未加索引，那么子表可能会被频繁锁住，从而导致死锁，降低并发性。所以，Oracle 官方建议绝对多数情况都为外键加索引，除非父表的唯一键/主键绝对不会更新或删除。</p>
+<h2 id="未加索引的外键与锁"><a href="#未加索引的外键与锁" class="headerlink" title="未加索引的外键与锁"></a>未加索引的外键与锁</h2><p>当以下条件都满足时，数据库会获取子表的全表锁：</p>
+<ul>
+<li>子表的外键列未加索引</li>
+<li>父表的主键被修改(比如：删除一行或主键被修改)或者合并到父表。在父表插入一条记录是不会锁住子表的。</li>
+</ul>
+<p>假设 hr.departments 是父表，hr.employees 是子表， hr.employees 中的 department_id 是未加索引的外键列。下图展现了修改父表 department_id = 60 这一记录的主键时，数据库加锁的情况：</p>
+<p><img src="https://pic.yupoo.com/jiananshi/2ee4d87f/a5d4acb9.png" alt="unindexed_foreign_key"></p>
+<p>在上图中，数据库在更新父表 department 60 这一记录的主键时，会获得子表 employees 的全表锁。这样其他会话可以查询子表但不允许更新子表。子表的表锁会在父表更新完成后立刻释放。如果修改父表多条记录，那么修改每一条都会获得子表的表锁并释放。</p>
+<p>在 Oracle 9i 及以上版本中，全表锁都是短期的，仅在 DML 操作期间存在，而不是整个事务。但即便如此，还是要避免，因为全表锁可能会导致死锁。Tom 也曾说过，导致死锁的头号原因就是外键未加索引(第二号原因是表上的位图索引遭到并发更新)。</p>
+<blockquote>
+<p>需要注意，子表的 DML 不会获得父表的表锁  </p>
+</blockquote>
+<h2 id="加索引的外键与锁"><a href="#加索引的外键与锁" class="headerlink" title="加索引的外键与锁"></a>加索引的外键与锁</h2><p>当以下条件都满足时，数据库不会获得子表的全表锁。</p>
+<ul>
+<li>子表的外键列已加索引</li>
+<li>父表的主键正在被修改(比如：删除一行或主键被修改)或合并到父表</li>
+</ul>
+<p>下面的图展示了子表 employees 的外键列 department_id 加了索引。 当一个事务从父表 department 中删除 department 280 时， 这一操作不会引起数据库获得子表的全表锁。</p>
+<p>父表上的锁是为了防止其他事务获取表级排他锁，但不会阻止父表或子表上的 DML  操作。</p>
+<p><img src="https://pic.yupoo.com/jiananshi/3acb7f13/cf7696ef.png" alt="indexed_foreign_key"></p>
+<p>如果子表指明了 <code>ON DELETE CASCADE</code>, 那么删除父表会导致删除子表对应的记录。比如删除父表 department 280 这一记录，那么子表 employees 中 department_id 为 280 的记录也会被删除。 在这种情况下，加锁的规则与删除完主表后再删除子表的记录是一样的。</p>
+<p>这篇是不是有点水啊。。。。是时候放出我姑家的小霸王 cookie 宝宝撑下场了。</p>
+<blockquote>
+<p>虽然我又咬人，又乱叫，还喜欢对着窗帘小便。但我知道我是个好狗狗。<br>                                         ————cookie                                                                            </p>
+</blockquote>
+<p><img src="https://pic.yupoo.com/jiananshi/47585e7b/8318af70.jpg" alt=""></p>
+<p><img src="https://pic.yupoo.com/jiananshi/943bd285/7bae2334.jpg" alt=""></p>
+<p><img src="https://pic.yupoo.com/jiananshi/8fa84a4a/ded05647.jpg" alt=""></p>
+<p><img src="https://pic.yupoo.com/jiananshi/65bbfe90/2c9aa704.jpg" alt=""></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2017/09/04/oracle-foreignkey-lock/" data-id="cjtvbucio002lz15svv2c3aut" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2017/09/04/oracle-foreignkey-lock/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2017/09/04/oracle-foreignkey-lock/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/10/07/spring-dispatcherServlet/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    【译】Spring MVC 中的 DispatcherServlet
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/07/15/deadlock-in-oracle/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">小死锁</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

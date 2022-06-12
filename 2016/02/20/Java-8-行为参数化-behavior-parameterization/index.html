@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>Java 8 --行为参数化(behavior parameterization) | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="根据书 &amp;lt;&amp;lt; Java 8 in action &amp;gt;&amp;gt;第二章的一个例子整理。书中通过一个例子，讲述了如何利用behavior parameterization来应对不停变化的需求。想想之前自己写的工具类，真是大写的Low啊。。。。
+
+题外话：要时刻谨记 Later equals never,Later equals never,Later equals never！！！！！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 8 --行为参数化(behavior parameterization)">
+<meta property="og:url" content="http://yemengying.com/2016/02/20/Java-8-行为参数化-behavior-parameterization/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="根据书 &amp;lt;&amp;lt; Java 8 in action &amp;gt;&amp;gt;第二章的一个例子整理。书中通过一个例子，讲述了如何利用behavior parameterization来应对不停变化的需求。想想之前自己写的工具类，真是大写的Low啊。。。。
+
+题外话：要时刻谨记 Later equals never,Later equals never,Later equals never！！！！！">
+<meta property="og:image" content="http://yemengying.com/images/thumbnail6.jpg">
+<meta property="og:updated_time" content="2018-12-13T08:09:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 8 --行为参数化(behavior parameterization)">
+<meta name="twitter:description" content="根据书 &amp;lt;&amp;lt; Java 8 in action &amp;gt;&amp;gt;第二章的一个例子整理。书中通过一个例子，讲述了如何利用behavior parameterization来应对不停变化的需求。想想之前自己写的工具类，真是大写的Low啊。。。。
+
+题外话：要时刻谨记 Later equals never,Later equals never,Later equals never！！！！！">
+<meta name="twitter:image" content="http://yemengying.com/images/thumbnail6.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2016/02/20/Java-8-行为参数化-behavior-parameterization/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java 8 --行为参数化(behavior parameterization)
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/02/20/Java-8-行为参数化-behavior-parameterization/">
+            <time datetime="2016-02-20T11:33:21.000Z" itemprop="datePublished">2016-02-20</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#行为参数化"><span class="toc-number">1.</span> <span class="toc-text">行为参数化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#例子"><span class="toc-number">2.</span> <span class="toc-text">例子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#版本1-：-过滤出绿色苹果"><span class="toc-number">2.1.</span> <span class="toc-text">版本1 ： 过滤出绿色苹果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本2-：-将颜色作为参数"><span class="toc-number">2.2.</span> <span class="toc-text">版本2 ： 将颜色作为参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本3-：-在一个方法中过滤想要过滤的属性"><span class="toc-number">2.3.</span> <span class="toc-text">版本3 ： 在一个方法中过滤想要过滤的属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本4-：-根据抽象约束过滤"><span class="toc-number">2.4.</span> <span class="toc-text">版本4 ： 根据抽象约束过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本5-：-使用匿名类"><span class="toc-number">2.5.</span> <span class="toc-text">版本5 ： 使用匿名类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本6-：-使用lambda表达式"><span class="toc-number">2.6.</span> <span class="toc-text">版本6 ： 使用lambda表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最终版-：-使用泛型，抽象列表的类型"><span class="toc-number">2.7.</span> <span class="toc-text">最终版 ： 使用泛型，抽象列表的类型</span></a></li></ol></li></ol>
+                </div>
+            
+            <blockquote>
+<p>根据书 &lt;&lt; Java 8 in action &gt;&gt;第二章的一个例子整理。书中通过一个例子，讲述了如何利用behavior parameterization来应对不停变化的需求。想想之前自己写的工具类，真是大写的Low啊。。。。</p>
+</blockquote>
+<p>题外话：要时刻谨记 Later equals never,Later equals never,Later equals never！！！！！！！</p>
+<a id="more"></a>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="http://music.163.com/outchain/player?type=2&id=35090760&auto=0&height=66"></iframe>
+
+
+
+<h3 id="行为参数化"><a href="#行为参数化" class="headerlink" title="行为参数化"></a>行为参数化</h3><p>在软件开发中，一个众所周知的问题就是无论你做什么,用户的需求总会改变。举个栗子，假设要做一个帮助农场主理解库存的应用。一开始，农场主可能想有一个在所有库存中找出所有绿色苹果的功能。但是第二天他可能会告诉你他还想要找到所有重量大于150g的苹果。两天后，他可能又提出找到所有绿色的并且重量大于150g的苹果。在面对这些相似的新功能时，我们都想尽可能的减少开发量。<br><strong>behavior parameterization</strong>是用来处理频繁更改的需求的一种软件开发模式，可以将一段代码块当做参数传给另一个方法，之后执行。这样做的好处是，方法的行为可以由传入的代码块控制。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>下面通过农场应用来看看面对不断改变的需求如何将代码写的更灵活。先实现第一个功能:从一个list中过滤出所有的绿色苹果,听起来是不是很简单。</p>
+<h4 id="版本1-：-过滤出绿色苹果"><a href="#版本1-：-过滤出绿色苹果" class="headerlink" title="版本1 ： 过滤出绿色苹果"></a>版本1 ： 过滤出绿色苹果</h4><p>最开始想到的解决办法可能长下面的样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Apple&gt; <span class="title">filterGreenApples</span><span class="params">(List&lt;Apple&gt; inventory)</span> </span>&#123;</div><div class="line">        List&lt;Apple&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;(); <span class="comment">// An accumulator list for apples</span></div><div class="line">        <span class="keyword">for</span> (Apple apple : inventory) &#123;</div><div class="line">            <span class="keyword">if</span> ( <span class="string">"green"</span>.equals(apple.getColor())) &#123;</div><div class="line">                <span class="comment">// Select only green apples</span></div><div class="line">                result.add(apple);     </div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>上面的方法可以过滤出绿色的苹果，但是如果农场主还想知道红色的苹果呢？一个很幼稚的做法是将上面的方法复制一遍，命名为filterRedApples，更改一下if语句。但如果还想知道黄色的呢？一个好的做法是：试着抽象。</p>
+<h4 id="版本2-：-将颜色作为参数"><a href="#版本2-：-将颜色作为参数" class="headerlink" title="版本2 ： 将颜色作为参数"></a>版本2 ： 将颜色作为参数</h4><p>可以在方法中加入颜色作为参数，使代码更灵活。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Apple&gt; <span class="title">filterApplesByColor</span><span class="params">(List&lt;Apple&gt; inventory, String color)</span> </span>&#123;</div><div class="line">        List&lt;Apple&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (Apple apple: inventory) &#123;</div><div class="line">            <span class="keyword">if</span> (apple.getColor().equals(color)) &#123;</div><div class="line">                result.add(apple);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样就可以灵活的根据颜色来筛选。这时农场主又提出了根据重量筛选，于是参照上面根据颜色筛选的方法又新增了一个根据重量筛选的方法，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Apple&gt; <span class="title">filterApplesByWeight</span><span class="params">(List&lt;Apple&gt; inventory, <span class="keyword">int</span> weight)</span> </span>&#123;</div><div class="line">        List&lt;Apple&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (Apple apple: inventory) &#123;</div><div class="line">            <span class="keyword">if</span> (apple.getWeight()&gt;weight) &#123;</div><div class="line">                result.add(apple);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这是一个解决办法，但考虑到苹果有许多其它特性，如果针对每一特性的筛选都复制一个方法，违背了DRY(don’t repeat yourself)原则.我们可以将颜色和重量结合到一个方法，并通过一个标记来指明想要进行过滤的是颜色还是重量(这样做其实很不好，之后会解释)。</p>
+<h4 id="版本3-：-在一个方法中过滤想要过滤的属性"><a href="#版本3-：-在一个方法中过滤想要过滤的属性" class="headerlink" title="版本3 ： 在一个方法中过滤想要过滤的属性"></a>版本3 ： 在一个方法中过滤想要过滤的属性</h4><p>下面在一个方法中根据flag值的不同过滤不同的属性(这样做法很不好)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Apple&gt; <span class="title">filterApples</span><span class="params">(List&lt;Apple&gt; inventory,String color, <span class="keyword">int</span> weight, <span class="keyword">boolean</span> flag)</span> </span>&#123;</div><div class="line">        List&lt;Apple&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        <span class="keyword">for</span> (Apple apple : inventory) &#123;</div><div class="line">            <span class="keyword">if</span> ((flag&amp;&amp;apple.getColor().equals(color)) || </div><div class="line">                    (!flag &amp;&amp; apple.getWeight() &gt; weight)) &#123;</div><div class="line">                result.add(apple);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>上面的代码很丑陋而且也没有解决需求变化的问题，比如如果农场主还想要根据大小，产地，形状来筛选就不适用了。</p>
+<h4 id="版本4-：-根据抽象约束过滤"><a href="#版本4-：-根据抽象约束过滤" class="headerlink" title="版本4 ： 根据抽象约束过滤"></a>版本4 ： 根据抽象约束过滤</h4><p>一个更好的解决办法是将过滤的标准抽象出来，我们先定义一个接口作为抽象的选择标准.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ApplePredicate</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(Apple apple)</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>接下来就可以定义多个ApplePredicate接口的实现类来代表不同的过滤标准。如下图:<br><img src="https://pic.yupoo.com/jiananshi/91713320/e7bb6ff6.jpg" alt="abstract criteria"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//select only heavy apple</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppleHeavyWeightPredicate</span> <span class="keyword">implements</span> <span class="title">ApplePredicate</span> </span>&#123; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">test</span><span class="params">(Apple apple)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> apple.getWeight() &gt; <span class="number">150</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//select only green apple</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppleGreenColorPredicate</span> <span class="keyword">implements</span> <span class="title">ApplePredicate</span> </span>&#123; </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">test</span><span class="params">(Apple apple)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"green"</span>.equals(apple.getColor);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面每一个实现了ApplePredicate接口的类都代表了一种筛选策略。在此基础上，我们可以将筛选方法修改成下面的样子,将ApplePredicate作为参数传入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Apple&gt; <span class="title">filterApples</span><span class="params">(List&lt;Apple&gt; inventory,  ApplePredicate p)</span> </span>&#123;</div><div class="line">	List&lt;Apple&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">	<span class="keyword">for</span> (Apple apple : inventory) &#123;</div><div class="line">		<span class="keyword">if</span> (p.test(apple)) &#123;</div><div class="line">			result.add(apple);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在的筛选方法比第一个版本灵活多了，如果想改变筛选标准，只需创建不同的ApplePredicate对象，并传入filterApples方法即可。例如新增了选出红色并且重量大于150g的苹果的需求，我们可以创建一个实现ApplePredicate接口的类即可，代码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppleRedAndHeavyPredicate</span> <span class="keyword">implements</span> <span class="title">ApplePredicate</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">test</span><span class="params">(Apple apple)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"red"</span>.equals(apple.getColor()) &amp;&amp; apple.getWeight() &gt; <span class="number">150</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">List&lt;Apple&gt; redAndHeavyApples = filter(inventory, <span class="keyword">new</span> AppleRedAndHeavyPredicate());</div></pre></td></tr></table></figure></p>
+<p>但是上面的实现有一个缺点，就是太啰嗦了，每新增一个筛选标准都要新增一个类。下面来继续优化一下。</p>
+<h4 id="版本5-：-使用匿名类"><a href="#版本5-：-使用匿名类" class="headerlink" title="版本5 ： 使用匿名类"></a>版本5 ： 使用匿名类</h4><p>匿名类是没有名字的类，使用匿名类可以创建一个临时的实现。下面的代码展示了如何利用匿名类创建实现了ApplePredicate的对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;Apple&gt; redApples = filterApples(inventory, <span class="keyword">new</span> ApplePredicate(） &#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">test</span><span class="params">(Apple apple)</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"red"</span>.equals(apple.getColor());</div><div class="line">	&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>但是尽管匿名类解决了为一个接口声明多个实现类的问题，使用匿名类还不足够好。使用匿名类代码看起来有些笨重，可读性差，而且有一些开发者对匿名类感到困惑。下面我们使用Java 8引入的lambda表达式使代码看起来更加简洁一点。</p>
+<h4 id="版本6-：-使用lambda表达式"><a href="#版本6-：-使用lambda表达式" class="headerlink" title="版本6 ： 使用lambda表达式"></a>版本6 ： 使用lambda表达式</h4><p>我们可以使用lambda表达式简化代码.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List&lt;Apple&gt; result = filterApples(inventory, (Apple apple) -&gt; <span class="string">"red"</span>.equals(apple.getColor()));</div></pre></td></tr></table></figure>
+<h4 id="最终版-：-使用泛型，抽象列表的类型"><a href="#最终版-：-使用泛型，抽象列表的类型" class="headerlink" title="最终版 ： 使用泛型，抽象列表的类型"></a>最终版 ： 使用泛型，抽象列表的类型</h4><p>我们可以继续做一些抽象。目前，filterApples方法只可以过滤元素类型为Apple的List。我们可以将列表的类型抽象出来，使得我们的过滤方法变得更加通用，代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Predicate</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(T t)</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">filter</span><span class="params">(List&lt;T&gt; list, Predicate&lt;T&gt; p)</span> </span>&#123;</div><div class="line">	List&lt;T&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">	<span class="keyword">for</span> (T e: list) &#123;</div><div class="line">		<span class="keyword">if</span> (p.test(e)) &#123;</div><div class="line">			result.add(e);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>经评论区提醒，在加个stream版本的(果然清爽不少↖(^ω^)↗)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">filterWithStream</span><span class="params">(List&lt;T&gt; list, Predicate&lt;T&gt; p)</span> </span>&#123;</div><div class="line">    List&lt;T&gt; result;</div><div class="line">    result = list.stream().filter( t -&gt; p.test(t)).collect(Collectors.toList());</div><div class="line"></div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样就可以对多种类型的list进行过滤了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">List&lt;Apple&gt; redApples = filter(inventory, (Apple apple) -&gt; <span class="string">"red"</span>.equals(apple.getColor()));</div><div class="line"></div><div class="line">List&lt;Integer&gt; evenNumber = filter(numbers, (Integer i) -&gt; i%<span class="number">2</span> == <span class="number">0</span>);</div></pre></td></tr></table></figure>
+<p>终于over了，拖延癌果真已经到了晚期。。。。。</p>
+<p><img src="https://pic.yupoo.com/jiananshi/af5a52db/006fc4d2.jpg" alt="do it now"></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2016/02/20/Java-8-行为参数化-behavior-parameterization/" data-id="cjtvbucgx0006z15sgf2obnvv" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2016/02/20/Java-8-行为参数化-behavior-parameterization/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2016/02/20/Java-8-行为参数化-behavior-parameterization/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/03/15/zootopia/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    疯狂动物城
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2016/02/03/译-Java中HashMap和LinkedHashMap如何解决冲突/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">[译]Java 8中HashMap和LinkedHashMap如何解决冲突</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

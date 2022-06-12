@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>使代码更简洁(一)---List相关 | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="以前写在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和list相关的吧。。。。。会持续记录。。。。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使代码更简洁(一)---List相关">
+<meta property="og:url" content="http://yemengying.com/2015/09/10/使代码更简洁-一-List相关/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="以前写在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和list相关的吧。。。。。会持续记录。。。。">
+<meta property="og:image" content="http://yemengying.com/images/thumbnail1.jpg">
+<meta property="og:updated_time" content="2017-06-10T07:56:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使代码更简洁(一)---List相关">
+<meta name="twitter:description" content="以前写在segmentFault上的一篇文章 搬移到这里。
+
+记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和list相关的吧。。。。。会持续记录。。。。">
+<meta name="twitter:image" content="http://yemengying.com/images/thumbnail1.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2015/09/10/使代码更简洁-一-List相关/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            使代码更简洁(一)---List相关
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/09/10/使代码更简洁-一-List相关/">
+            <time datetime="2015-09-10T06:07:54.000Z" itemprop="datePublished">2015-09-10</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/list/">list</a>, <a class="tag-link" href="/tags/stream/">stream</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#利用stream代替for循环"><span class="toc-number">1.</span> <span class="toc-text">利用stream代替for循环</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#打印list中的元素"><span class="toc-number">1.1.</span> <span class="toc-text">打印list中的元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从list中删除指定的元素"><span class="toc-number">1.2.</span> <span class="toc-text">从list中删除指定的元素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#list排序"><span class="toc-number">1.3.</span> <span class="toc-text"> list排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判读list中的元素是不是全部满足-指定条件"><span class="toc-number">1.4.</span> <span class="toc-text"> 判读list中的元素是不是全部满足 指定条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判断list中是不是有一个元素满足predicate的条件"><span class="toc-number">1.5.</span> <span class="toc-text"> 判断list中是不是有一个元素满足predicate的条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#判断list中是不是没有一个元素满足predicate的条件"><span class="toc-number">1.6.</span> <span class="toc-text"> 判断list中是不是没有一个元素满足predicate的条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#list去重"><span class="toc-number">1.7.</span> <span class="toc-text"> list去重</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2利用泛型编写一些通用的方法"><span class="toc-number">2.</span> <span class="toc-text">2利用泛型编写一些通用的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方便的构造一个list"><span class="toc-number">2.1.</span> <span class="toc-text">方便的构造一个list</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用递归获得多个list的笛卡尔积"><span class="toc-number">2.2.</span> <span class="toc-text">利用递归获得多个list的笛卡尔积</span></a></li></ol></li></ol>
+                </div>
+            
+            <p>以前写在segmentFault上的一篇文章 搬移到这里。</p>
+<blockquote>
+<p>记录一下在工作开发中封装的一些工具类，使代码看起来更加的简洁。这篇就记录下和list相关的吧。。。。。会持续记录。。。。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="利用stream代替for循环"><a href="#利用stream代替for循环" class="headerlink" title="利用stream代替for循环"></a>利用stream代替for循环</h1><p>   在对list的操作中常常需要for循环来遍历整个list，代码看起来不够简洁。所以利用java8的新特性Stream来代替for循环，提高程序的可读性。<br>从网上coyp了一些stream的介绍：Stream 不是集合元素，它不是数据结构并不保存数据，它是有关算法和计算的，它更像一个高级版本的 Iterator。原始版本的 Iterator，用户只能显式地一个一个遍历元素并对其执行某些操作；高级版本的 Stream，用户只要给出需要对其包含的元素执行什么操作，比如 “过滤掉长度大于 10 的字符串”、“获取每个字符串的首字母”等，Stream 会隐式地在内部进行遍历，做出相应的数据转换。<br>Stream 就如同一个迭代器（Iterator），单向，不可往复，数据只能遍历一次，遍历过一次后即用尽了，就好比流水从面前流过，一去不复返。<br>而和迭代器又不同的是，Stream 可以并行化操作，迭代器只能命令式地、串行化操作。顾名思义，当使用串行方式去遍历时，每个 item 读完后再读下一个 item。而使用并行去遍历时，数据会被分成多个段，其中每一个都在不同的线程中处理，然后将结果一起输出。Stream 的并行操作依赖于 Java7 中引入的 Fork/Join 框架（JSR166y）来拆分任务和加速处理过程。<br>下面是一些利用stream写的工具类</p>
+<h2 id="打印list中的元素"><a href="#打印list中的元素" class="headerlink" title="打印list中的元素"></a>打印list中的元素</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 打印list中的元素</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">printList</span><span class="params">(List&lt;T&gt; list)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list) list = <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		list.stream().forEach(n -&gt; System.out.println(n.toString()));</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="从list中删除指定的元素"><a href="#从list中删除指定的元素" class="headerlink" title="从list中删除指定的元素"></a>从list中删除指定的元素</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 从list中删除指定的元素 其他类需重写equals方法</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> arg 要删除的元素</div><div class="line">	 * <span class="doctag">@return</span> 返回删除了指定元素的list</div><div class="line">	 * eg:list:[1,2,3,1]---removeElementFromList(list,1)---return list:[2,3]</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">removeElementFromList</span><span class="params">(List&lt;T&gt; list, T arg)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		<span class="keyword">if</span>(arg == <span class="keyword">null</span>) <span class="keyword">return</span> list;</div><div class="line">		<span class="keyword">return</span> list.stream().filter(n -&gt; &#123;</div><div class="line">	        <span class="keyword">return</span> !n.equals(arg);</div><div class="line">	    &#125;).collect(Collectors.toList());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="list排序"><a href="#list排序" class="headerlink" title=" list排序"></a> list排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * list排序</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> comparator</div><div class="line">	 * <span class="doctag">@return</span> 返回按comparator排好序的list</div><div class="line">	 * eg:User:id name两个属性 </div><div class="line">	 *  List&lt;User&gt; userList = new ArrayList&lt;User&gt;();</div><div class="line">	 *	userList.add(new User(1,"abc"));</div><div class="line">	 *	userList.add(new User(3, "ccd"));</div><div class="line">	 *	userList.add(new User(2, "bde"));</div><div class="line">	 *	1.按user名字排序</div><div class="line">	 *	userList = ListUtils.sortList(userList, (p1, p2) -&gt; p1.getName().compareTo(p2.getName()));</div><div class="line">	 *	2.按user Id排序</div><div class="line">	 *  userList = ListUtils.sortList(userList, (p1, p2) -&gt; p1.getId()-p2.getId());</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">sortList</span><span class="params">(List&lt;T&gt; list, Comparator&lt;? <span class="keyword">super</span> T&gt; comparator)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == comparator) <span class="keyword">return</span> list;</div><div class="line">		<span class="keyword">return</span> list.stream().sorted(comparator).collect(Collectors.toList());</div><div class="line">		</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="判读list中的元素是不是全部满足-指定条件"><a href="#判读list中的元素是不是全部满足-指定条件" class="headerlink" title=" 判读list中的元素是不是全部满足 指定条件"></a> 判读list中的元素是不是全部满足 指定条件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 判读list中的元素是不是全部满足 predicate的条件 </div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> predicate</div><div class="line">	 * <span class="doctag">@return</span> 全部满足 true 有不满足的 false</div><div class="line">	 * eg：判断list中的user的id是不是均小于4</div><div class="line">	 * List&lt;User&gt; userList = new ArrayList&lt;User&gt;();</div><div class="line">	 *	userList.add(new User(1,"abc"));</div><div class="line">	 *	userList.add(new User(3, "ccd"));</div><div class="line">	 *	userList.add(new User(2, "bde"));</div><div class="line">	 *	System.out.println(ListUtils.isAllMatch(userList, u -&gt; u.getId()&lt;4));</div><div class="line">	 *  输出 true</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">isAllMatch</span><span class="params">(List&lt;T&gt; list, Predicate&lt;? <span class="keyword">super</span> T&gt; predicate)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == predicate) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">return</span> list.stream().allMatch(predicate);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="判断list中是不是有一个元素满足predicate的条件"><a href="#判断list中是不是有一个元素满足predicate的条件" class="headerlink" title=" 判断list中是不是有一个元素满足predicate的条件"></a> 判断list中是不是有一个元素满足predicate的条件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 只要有一个元素满足predicate的条件 返回true</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> predicate</div><div class="line">	 * <span class="doctag">@return</span> </div><div class="line">	 * eg：判断list中的user的id是不是有一个大于4</div><div class="line">	 * List&lt;User&gt; userList = new ArrayList&lt;User&gt;();</div><div class="line">	 *	userList.add(new User(1,"abc"));</div><div class="line">	 *	userList.add(new User(3, "ccd"));</div><div class="line">	 *	userList.add(new User(2, "bde"));</div><div class="line">	 *	System.out.println(ListUtils.isAllMatch(userList, u -&gt; u.getId()&gt;4));  return false</div><div class="line">	 */ </div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">isAnyMatch</span><span class="params">(List&lt;T&gt; list, Predicate&lt;? <span class="keyword">super</span> T&gt; predicate)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == predicate) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">return</span> list.stream().anyMatch(predicate);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="判断list中是不是没有一个元素满足predicate的条件"><a href="#判断list中是不是没有一个元素满足predicate的条件" class="headerlink" title=" 判断list中是不是没有一个元素满足predicate的条件"></a> 判断list中是不是没有一个元素满足predicate的条件</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * 没有一个元素满足predicate的条件 返回true</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@param</span> predicate</div><div class="line">	 * <span class="doctag">@return</span></div><div class="line">	 * eg：判断list中的user的id是不是有一个大于4</div><div class="line">	 * List&lt;User&gt; userList = new ArrayList&lt;User&gt;();</div><div class="line">	 *	userList.add(new User(1,"abc"));</div><div class="line">	 *	userList.add(new User(3, "ccd"));</div><div class="line">	 *	userList.add(new User(2, "bde"));</div><div class="line">	 *	System.out.println(ListUtils.isAllMatch(userList, u -&gt; u.getId()&gt;4));  return true</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">boolean</span> <span class="title">isNoneMatch</span><span class="params">(List&lt;T&gt; list, Predicate&lt;? <span class="keyword">super</span> T&gt; predicate)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == predicate) <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">		<span class="keyword">return</span> list.stream().noneMatch(predicate);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="list去重"><a href="#list去重" class="headerlink" title=" list去重"></a> list去重</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * </div><div class="line"> * <span class="doctag">@author</span> yemengying</div><div class="line"> *  </div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * list去重</div><div class="line">	 * <span class="doctag">@param</span> list</div><div class="line">	 * <span class="doctag">@return</span></div><div class="line">	 * eg:</div><div class="line">	 * list[1,2,2]---distinctList(list)---list[1,2]</div><div class="line">	 */</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">distinctList</span><span class="params">(List&lt;T&gt; list)</span></span>&#123;</div><div class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.isEmpty()) <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		<span class="keyword">return</span> list.stream().distinct().collect(Collectors.toList());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="2利用泛型编写一些通用的方法"><a href="#2利用泛型编写一些通用的方法" class="headerlink" title="2利用泛型编写一些通用的方法"></a>2利用泛型编写一些通用的方法</h1><h2 id="方便的构造一个list"><a href="#方便的构造一个list" class="headerlink" title="方便的构造一个list"></a>方便的构造一个list</h2><p>在开发时经常遇到要调用一个接口，接口的参数是list。例如在开发通知中心时发送消息的接口定义如下,其中messageForm是要发送的内容，userList是接受者的用户id</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pushMessage</span><span class="params">(MessageForm messageForm,List&lt;Integer&gt; userList)</span></span>;</div></pre></td></tr></table></figure>
+<p>这样，在给一个人发送消息的时候也需要构造一个list<br>一般的做法,如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">list.add(<span class="number">8808</span>);</div><div class="line">pushService.pushMessage(messageForm,list);</div></pre></td></tr></table></figure>
+<p>比较麻烦，所以同事封装了一个工具方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListUtils</span> </span>&#123;</div><div class="line">     <span class="comment">/**</span></div><div class="line">	 * 构造list</div><div class="line">	 * <span class="doctag">@param</span> args</div><div class="line">	 * <span class="doctag">@return</span></div><div class="line">	 * <span class="doctag">@author</span> zhoujianming</div><div class="line">	 */</div><div class="line">	<span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>) </div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">List&lt;T&gt; <span class="title">toList</span><span class="params">(T...args)</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">null</span> == args) &#123;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		&#125;</div><div class="line">		List&lt;T&gt; list = <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">		<span class="keyword">for</span> (T t : args) &#123;</div><div class="line">			list.add(t);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> list;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样在调用时，比较简洁:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//给id 8808和8809发消息</span></div><div class="line">pushService.pushMessage(messageForm,ListUtils.toList(<span class="number">8808</span>,<span class="number">8809</span>));</div></pre></td></tr></table></figure>
+<h2 id="利用递归获得多个list的笛卡尔积"><a href="#利用递归获得多个list的笛卡尔积" class="headerlink" title="利用递归获得多个list的笛卡尔积"></a>利用递归获得多个list的笛卡尔积</h2><p>获得多个list的笛卡尔积，代码参考stackoverflow</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 递归获得多个list的笛卡尔积</div><div class="line"> * eg[1],[8808],[1,2,3]--&gt;[[1,8808,1],[1,8808,2]]</div><div class="line"> * 参考：http://stackoverflow.com/questions/714108/cartesian-product-of-arbitrary-sets-in-java</div><div class="line"> * <span class="doctag">@param</span> lists</div><div class="line"> * <span class="doctag">@return</span></div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt;  List&lt;List&lt;T&gt;&gt; cartesianProduct(List&lt;List&lt;T&gt;&gt; lists) &#123;</div><div class="line">    List&lt;List&lt;T&gt;&gt; resultLists = <span class="keyword">new</span> ArrayList&lt;List&lt;T&gt;&gt;();</div><div class="line">    <span class="keyword">if</span> (lists.size() == <span class="number">0</span>) &#123;</div><div class="line">        resultLists.add(<span class="keyword">new</span> ArrayList&lt;T&gt;());</div><div class="line">        <span class="keyword">return</span> resultLists;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        List&lt;T&gt; firstList = lists.get(<span class="number">0</span>);</div><div class="line">        List&lt;List&lt;T&gt;&gt; remainingLists = cartesianProduct(lists.subList(<span class="number">1</span>, lists.size()));</div><div class="line">        <span class="keyword">for</span> (T condition : firstList) &#123;</div><div class="line">            <span class="keyword">for</span> (List&lt;T&gt; remainingList : remainingLists) &#123;</div><div class="line">                ArrayList&lt;T&gt; resultList = <span class="keyword">new</span> ArrayList&lt;T&gt;();</div><div class="line">                resultList.add(condition);</div><div class="line">                resultList.addAll(remainingList);</div><div class="line">                resultLists.add(resultList);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> resultLists;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时将需要获得笛卡尔积的多个list放到一个list里，调用上面的方法即可，调用示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; list1 = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</div><div class="line">List&lt;Integer&gt; list2 = Arrays.asList(<span class="number">8808</span>,<span class="number">8809</span>,<span class="number">8810</span>);</div><div class="line">List&lt;Integer&gt; list3 = Arrays.asList(<span class="number">4</span>);</div><div class="line">List&lt;List&lt;Integer&gt;&gt; lists = Arrays.asList(list1,list2,list3);</div><div class="line">List&lt;List&lt;Integer&gt;&gt; resultLists = ListUtils.cartesianProduct(lists);</div></pre></td></tr></table></figure>
+<p>[1,2,3],[8808,8809,8810],[4]——&gt;[[1, 8808, 4], [1, 8809, 4], [1, 8810, 4], [2, 8808, 4], [2, 8809, 4], [2, 8810, 4], [3, 8808, 4], [3, 8809, 4], [3, 8810, 4]]</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2015/09/10/使代码更简洁-一-List相关/" data-id="cjtvbucjl0044z15sy8yyk8gy" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2015/09/10/使代码更简洁-一-List相关/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2015/09/10/使代码更简洁-一-List相关/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/09/11/cleancode-collection/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    使代码更简洁(二)---集合转换相关
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/09/08/angularjs-bootstrap-ngDialog/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">angularjs+bootstrap+ngDialog实现模式对话框</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

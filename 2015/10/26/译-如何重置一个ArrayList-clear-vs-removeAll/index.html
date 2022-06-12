@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>【译】如何重置一个ArrayList--clear vs removeAll | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="安利一个APP–开发者头条，在上面发现一个不错的英文技术类博客，地址http://javarevisited.blogspot.com/，  会不定期的翻译一些 翻译不好见谅啊😼
+
+原文地址：http://javarevisited.blogspot.co.uk/2015/09/how-to-reset-arraylist-in-java-clear-vs-removeAll-example.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】如何重置一个ArrayList--clear vs removeAll">
+<meta property="og:url" content="http://yemengying.com/2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="安利一个APP–开发者头条，在上面发现一个不错的英文技术类博客，地址http://javarevisited.blogspot.com/，  会不定期的翻译一些 翻译不好见谅啊😼
+
+原文地址：http://javarevisited.blogspot.co.uk/2015/09/how-to-reset-arraylist-in-java-clear-vs-removeAll-example.">
+<meta property="og:image" content="http://yemengying.com/images/金泰妍.jpg">
+<meta property="og:updated_time" content="2017-06-10T07:56:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】如何重置一个ArrayList--clear vs removeAll">
+<meta name="twitter:description" content="安利一个APP–开发者头条，在上面发现一个不错的英文技术类博客，地址http://javarevisited.blogspot.com/，  会不定期的翻译一些 翻译不好见谅啊😼
+
+原文地址：http://javarevisited.blogspot.co.uk/2015/09/how-to-reset-arraylist-in-java-clear-vs-removeAll-example.">
+<meta name="twitter:image" content="http://yemengying.com/images/金泰妍.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            【译】如何重置一个ArrayList--clear vs removeAll
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/">
+            <time datetime="2015-10-26T15:20:04.000Z" itemprop="datePublished">2015-10-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/list/">list</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/翻译/">翻译</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Clear-vs-RemoveAll-Collection-c"><span class="toc-number">1.</span> <span class="toc-text">Clear() vs RemoveAll(Collection c)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除一个包含100k个元素的列表中的所有元素"><span class="toc-number">2.</span> <span class="toc-text">删除一个包含100k个元素的列表中的所有元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#扩展阅读："><span class="toc-number">3.</span> <span class="toc-text">扩展阅读：</span></a></li></ol>
+                </div>
+            
+            <blockquote>
+<p>安利一个APP–开发者头条，在上面发现一个不错的英文技术类博客，地址<a href="http://javarevisited.blogspot.com/，" target="_blank" rel="external">http://javarevisited.blogspot.com/，</a>  会不定期的翻译一些 翻译不好见谅啊😼</p>
+</blockquote>
+<p>原文地址：<a href="http://javarevisited.blogspot.co.uk/2015/09/how-to-reset-arraylist-in-java-clear-vs-removeAll-example.html" target="_blank" rel="external">http://javarevisited.blogspot.co.uk/2015/09/how-to-reset-arraylist-in-java-clear-vs-removeAll-example.html</a></p>
+<p>很多时候为了重用我们会想要重置一个ArrayList，这里的重置是指清空列表或移除列表所有的元素。在Java中，有两个方法可以帮助我们实现重置<code>clear</code>或<code>removeAll</code>。在列表长度很小的情况下(eg:10或100个元素)，可以放心的使用这两种方法。但如果列表很大(eg:10M个元素)，那么选择clear还是removeAll会对你java应用的性能造成巨大的影响。甚至有时，在列表过大的情况下，重置会耗费许多时间，那么重新创建一个新的列表比将老的列表重置要好。但需要提醒的是，必须要确保老的列表可以被垃圾回收，否则，有很大的风险会出现<code>java.lang.OutOfMemoryError: Java Heap Space</code>。言归正传，让我们看看clear()和removeAll()两个方法。大家应该常常会选择用clear(),因为他的复杂度是O(n),而相比之下，removeAll(Collection C)的性能要差一些，它的复杂度是O(n^2)。这也是为什么在重置大的列表的时候两个方法会有巨大的差异。如果阅读他们的源码并运行下面的例子程序，差异会更明显。<br><a id="more"></a></p>
+<h3 id="Clear-vs-RemoveAll-Collection-c"><a href="#Clear-vs-RemoveAll-Collection-c" class="headerlink" title="Clear() vs RemoveAll(Collection c)"></a>Clear() vs RemoveAll(Collection c)</h3><p>为了更好的比较这两个方法，阅读他们源码是很重要的。可以在<code>java.utils.ArrayList</code>类中找到clear()方法，不过为了方便我将它引入到了这里。下面的代码来自JDK 1.7.0_40版本。如果你想要学习更多的有关性能监控和调优的知识，我强烈建议阅读<code>Scott Oaks</code>写的<code>Java Performance the Definitive Guide</code>,它包含了java 7和一点java 8。下面是clear()的代码片段:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** </span></div><div class="line"> * Removes all of the elements from this list.The list will </div><div class="line"> * be empty after this call returns. </div><div class="line"> */ </div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span> </span>&#123; </div><div class="line"> 	modCount++; <span class="comment">// clear to let GC do its work </span></div><div class="line"> 	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) </div><div class="line"> 		elementData[i] = <span class="keyword">null</span>; </div><div class="line"> 	size = <span class="number">0</span>; </div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>大家可以看出，clear()在循环遍历ArrayList，并且将每一个元素都置为null，使它们在没有被外部引用的情况下可以被垃圾回收。相似的，我们可以在<code>java.util.AbstractCollection</code>类中查看removeAll(Collention c)的代码，下面是代码片段:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeAll</span><span class="params">(Collection&lt;?&gt; c)</span> </span>&#123;</div><div class="line">	<span class="comment">//判断对象是否为null</span></div><div class="line">      Objects.requireNonNull(c);</div><div class="line">      <span class="keyword">boolean</span> modified = <span class="keyword">false</span>;</div><div class="line">      Iterator&lt;?&gt; it = iterator();</div><div class="line">      <span class="keyword">while</span> (it.hasNext()) &#123;</div><div class="line">          <span class="keyword">if</span> (c.contains(it.next())) &#123;</div><div class="line">              it.remove();</div><div class="line">              modified = <span class="keyword">true</span>;</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> modified;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>这个方法会检查迭代器顺序返回的每个元素是否包含在特定的集合中。如果存在，调用迭代器的remove方法将它从集合中移除。因为会用到contains方法，removeAll的复杂度是O(n^2)。所以在想要重置一个大的ArrayList时，这种方法是绝对不可取的。下面我们比较一下两者在重置一个包含100K个元素时的性能差异。</p>
+<h3 id="删除一个包含100k个元素的列表中的所有元素"><a href="#删除一个包含100k个元素的列表中的所有元素" class="headerlink" title="删除一个包含100k个元素的列表中的所有元素"></a>删除一个包含100k个元素的列表中的所有元素</h3><p>我本来想在例子中尝试重置一个包含10M个元素的列表，不过在超过半个小时等待removeAll()结束后，我决定将元素的数量降为100K。在这种情况下，两个方法的差距也是很明显的。removeAll()比clear()多花费了10000倍的时间。事实上，在API中clear()和removeAll(Collection c)这两个方法的目的是不同的。clear()方法是为了通过删除所有元素而重置列表，而removeAll(Collection c)是为了从集合中删除某些存在于另一个提供的集合中的元素，并不是为了从集合中移除所有元素。所以如果你的目的是删除所有元素，用clear(),如果你的目的是删除某些存在于另一集合的元素，那么选择removeAll(Collection c)方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.ArrayList; </div><div class="line"><span class="comment">/**</span></div><div class="line"> * Java Program to remove all elements from list in Java and comparing </div><div class="line"> * performance of clearn() and removeAll() method. </div><div class="line"> * * <span class="doctag">@author</span> Javin Paul </div><div class="line"> */ </div><div class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ArrayListResetTest</span> </span>&#123; </div><div class="line"> </div><div class="line"> 	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIZE = <span class="number">100_000</span>; </div><div class="line"> 	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123; </div><div class="line"> 	</div><div class="line"> 	<span class="comment">// Two ArrayList for clear and removeAll </span></div><div class="line"> 	ArrayList numbers = <span class="keyword">new</span> ArrayList(SIZE); </div><div class="line"> 	ArrayList integers = <span class="keyword">new</span> ArrayList(SIZE); </div><div class="line"> 	<span class="comment">// Initialize ArrayList with 10M integers </span></div><div class="line"> 	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &amp;lt; SIZE; i++) &#123; </div><div class="line"> 		numbers.add(<span class="keyword">new</span> Integer(i)); </div><div class="line"> 		integers.add(<span class="keyword">new</span> Integer(i)); </div><div class="line"> 	&#125; </div><div class="line"> 	<span class="comment">// Empty ArrayList using clear method </span></div><div class="line"> 	<span class="keyword">long</span> startTime = System.nanoTime(); </div><div class="line"> 	numbers.clear(); </div><div class="line"> 	<span class="keyword">long</span> elapsed = System.nanoTime() - startTime; </div><div class="line"> 	System.out.println(<span class="string">"Time taken by clear to empty ArrayList of 1M elements (ns): "</span> + elapsed); </div><div class="line"> 	<span class="comment">// Reset ArrayList using removeAll method </span></div><div class="line"> 	startTime = System.nanoTime(); </div><div class="line"> 	integers.removeAll(integers); </div><div class="line"> 	<span class="keyword">long</span> time = System.nanoTime() - startTime; </div><div class="line"> 	System.out.println(<span class="string">"Time taken by removeAll to reset ArrayList of 1M elements (ns): "</span> + time); </div><div class="line"> 	&#125; </div><div class="line"> &#125; </div><div class="line"> 	</div><div class="line"> 	Output: </div><div class="line"> 	Time taken by clear to empty ArrayList of <span class="number">100000</span> elements (ns): <span class="number">889619</span> </div><div class="line"> 	Time taken by removeAll to reset ArrayList of <span class="number">100000</span> elements (ns): <span class="number">36633112126</span></div></pre></td></tr></table></figure>
+<p>由于程序使用了两个arrayList存储Integers，所以在运行时要确保有足够的内存，尤其是你想比较在列表存有1M个元素时，两种方法的性能差异。另外，由于使用了在数字中加入下划线的特性，所以需要java7来运行。如果没有JDK7，也可以移除SIZE常量中的下划线。</p>
+<blockquote>
+<p>以上就是关于如何重置一个ArrayList的内容。我们不仅仅学到了两种从列表中删除元素的方法，也学到了clear()和removeAll()方法的区别。我们明白了为什么在列表过大时，removeAll()性能很差。<br> PS：当使用clear()方法也消耗很长的时间时，考虑创建一个新的列表，因为java可以很快的创建一个新的对象。</p>
+</blockquote>
+<h3 id="扩展阅读："><a href="#扩展阅读：" class="headerlink" title="扩展阅读："></a>扩展阅读：</h3><ul>
+<li><a href="http://javarevisited.blogspot.sg/2014/07/java-optimization-empty-arraylist-and-Hashmap-cost-less-memory-jdk-17040-update.html" target="_blank" rel="external">ArrayList and HashMap Performance Improvement in JDK 7</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2012/01/convert-arraylist-to-set-java-example.html" target="_blank" rel="external">How to convert ArrayList to Set?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2012/01/how-to-sort-arraylist-in-java-example.html" target="_blank" rel="external">How to sort an ArrayList in reverse order in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2012/12/how-to-remove-duplicates-elements-from-ArrayList-Java.html" target="_blank" rel="external">How to remove duplicate elements from ArrayList in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2014/03/how-to-clone-collection-in-java-deep-copy-vs-shallow.html" target="_blank" rel="external">How to clone an ArrayList in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2011/12/how-to-convert-map-to-list-in-java.html" target="_blank" rel="external">How do you convert a Map to List in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2014/03/binary-search-vs-contains-performance.html" target="_blank" rel="external">Performance comparison of contains() vs binarySearch()</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2012/12/how-to-initialize-list-with-array-in-java.html" target="_blank" rel="external">How to initialize an ArrayList with values in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2015/07/java-arraylist-tutorial.html" target="_blank" rel="external">The ArrayList Guide</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2011/09/difference-vector-vs-arraylist-in-java.html" target="_blank" rel="external">The difference between an ArrayList and a Vector in Java?</a></li>
+<li><a href="http://javarevisited.blogspot.sg/2012/07/create-read-only-list-map-set-example-java.html" target="_blank" rel="external">How to make an ArrayList unmodifiable in Java?</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/" data-id="cjtvbuck10053z15sv2nvzmh4" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2015/10/26/译-如何重置一个ArrayList-clear-vs-removeAll/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2015/10/28/基于注解的mybatis插入对象时利用反射生成sql语句/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    使用基于注解的mybatis时,利用反射和注解生成sql语句
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/10/23/idea-sts/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Mac系统下Idea和STS的快捷键对比</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

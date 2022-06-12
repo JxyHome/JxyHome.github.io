@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+
+    <meta name="baidu-site-verification" content="lt822VnP06" />
+    <meta name="baidu-site-verification" content="0Ajixw1Puk" />
+    <meta name="google-site-verification" content="gCQD0Y6f0YlPTZTAjp_mqms4C7TlkMWrg3Xy0mFdMwI" />
+    <title>拥有自己的图书小金库 | Giraffe&#39;s Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在找matering elasticsearch second edition这本书的时候，在许多可以免费下电子书的网站都没有找到，所以就买了Geekbook一个月的会员，为了不浪费充会员的钱，决定撸个脚本把全站的书都下下来,并用django搭个管理后台。和洪菊，卢神利用空闲时间忙活了快两周，终于有了自己的图书小金库，5000+的优质英文原版电子书，哇咔咔咔咔，这辈子的书都有了，放了一部分到gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="拥有自己的图书小金库">
+<meta property="og:url" content="http://yemengying.com/2016/01/09/拥有自己的图书小金库/index.html">
+<meta property="og:site_name" content="Giraffe's Home">
+<meta property="og:description" content="在找matering elasticsearch second edition这本书的时候，在许多可以免费下电子书的网站都没有找到，所以就买了Geekbook一个月的会员，为了不浪费充会员的钱，决定撸个脚本把全站的书都下下来,并用django搭个管理后台。和洪菊，卢神利用空闲时间忙活了快两周，终于有了自己的图书小金库，5000+的优质英文原版电子书，哇咔咔咔咔，这辈子的书都有了，放了一部分到gi">
+<meta property="og:image" content="http://yemengying.com/images/thumbnail10.jpg">
+<meta property="og:updated_time" content="2018-12-14T09:16:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="拥有自己的图书小金库">
+<meta name="twitter:description" content="在找matering elasticsearch second edition这本书的时候，在许多可以免费下电子书的网站都没有找到，所以就买了Geekbook一个月的会员，为了不浪费充会员的钱，决定撸个脚本把全站的书都下下来,并用django搭个管理后台。和洪菊，卢神利用空闲时间忙活了快两周，终于有了自己的图书小金库，5000+的优质英文原版电子书，哇咔咔咔咔，这辈子的书都有了，放了一部分到gi">
+<meta name="twitter:image" content="http://yemengying.com/images/thumbnail10.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="https://yemengying.com/qiniu/image/image/favicon.png" />
+    
+
+
+    <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/lib/open-sans/styles.css">
+    <link rel="stylesheet" href="/lib/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/lib/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.css">
+    
+    
+        <script type="text/javascript">
+(function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-75861791-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?44bb8bfb1a576270255713e37746eb82";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+</head>
+<body>
+    <script src="//github.elemecdn.com/jiananshi/req/0.1.0/lib/req.js"></script>
+    <script src="//npm.elemecdn.com/jinkela@1.2.18/umd.js"></script>
+    <script src="//github.elemecdn.com/jiananshi/DisqusJS/2.0.8/index.js"></script>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Giraffe&#39;s Home</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+                    <a class="main-nav-link" href="/message">留言</a>
+                
+                    <a class="main-nav-link" href="/friends">友链</a>
+                
+                    <a class="main-nav-link" href="/reading">正在读...</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                    <td><a class="main-nav-link" href="/message">留言</a></td>
+                
+                    <td><a class="main-nav-link" href="/friends">友链</a></td>
+                
+                    <td><a class="main-nav-link" href="/reading">正在读...</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="https://pic.yupoo.com/jiananshi/e85e4303/735cf286.jpeg" />
+            <h2 id="name">Giraffe</h2>
+            <h3 id="title">Java Developer</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>Shanghai, China</span>
+            <a id="follow" target="_blank" href="https://github.com/giraffe0813/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                56
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                36
+                <span>标签</span>
+            </div>
+        </div>
+        <div class="profile-block recent-comments">
+            <p class="recent-comments-title">最新评论</p>
+            <ul id="disqus-recent-comments" class="recent-comments-container">
+            </ul>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/giraffe0813" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/atom.xml" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="2016/01/09/拥有自己的图书小金库/" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            拥有自己的图书小金库
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2016/01/09/拥有自己的图书小金库/">
+            <time datetime="2016-01-09T06:15:46.000Z" itemprop="datePublished">2016-01-09</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/python/">python</a>
+    </div>
+
+                    
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/django/">django</a>, <a class="tag-link" href="/tags/python/">python</a>, <a class="tag-link" href="/tags/爬虫/">爬虫</a>
+    </div>
+
+                </div>
+            </header>
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到的坑"><span class="toc-number">1.</span> <span class="toc-text">遇到的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#只带cookie-无法下载"><span class="toc-number">1.1.</span> <span class="toc-text">只带cookie 无法下载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#下载文件的时候不显示进度"><span class="toc-number">1.2.</span> <span class="toc-text">下载文件的时候不显示进度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#一本一本下载速度太慢"><span class="toc-number">1.3.</span> <span class="toc-text">一本一本下载速度太慢</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#无法展示下载书的具体信息"><span class="toc-number">1.4.</span> <span class="toc-text">无法展示下载书的具体信息</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#成品"><span class="toc-number">2.</span> <span class="toc-text">成品</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-number">3.</span> <span class="toc-text">Summary</span></a></li></ol>
+                </div>
+            
+            <blockquote>
+<p>在找matering elasticsearch second edition这本书的时候，在许多可以免费下电子书的网站都没有找到，所以就买了<a href="https://www.geekbooks.me/category" target="_blank" rel="external">Geekbook</a>一个月的会员，为了不浪费充会员的钱，决定撸个脚本把全站的书都下下来,并用django搭个管理后台。和<a href="https://github.com/KevinOfNeu" target="_blank" rel="external">洪菊</a>，<a href="https://github.com/stephenluu" target="_blank" rel="external">卢神</a>利用空闲时间忙活了快两周，终于有了自己的图书小金库，5000+的优质英文原版电子书，哇咔咔咔咔，这辈子的书都有了，放了一部分到github上。<br>geekbook千万不要怪我们啊，谁让你不封我们的~~。<br><strong>项目地址：</strong><div id="badge-container-giraffe0813-GeekBook-3d83e8f" class="hexo-github" style="width: 100%"></div>
+<script src="/hexo-github/badge.js"></script>
+<script type="text/javascript">
+  loadStyle("/hexo-github/style.css");
+  loadStyle("/hexo-github/octicons/octicons.css");
+  new Badge("#badge-container-giraffe0813-GeekBook-3d83e8f", "giraffe0813", "GeekBook", "3d83e8f", false);
+</script>
+<br><strong>部分电子书地址:</strong> <div id="badge-container-Geek-Organization-geek-programming-books-643e0bd" class="hexo-github" style="width: 100%"></div>
+<script src="/hexo-github/badge.js"></script>
+<script type="text/javascript">
+  loadStyle("/hexo-github/style.css");
+  loadStyle("/hexo-github/octicons/octicons.css");
+  new Badge("#badge-container-Geek-Organization-geek-programming-books-643e0bd", "Geek-Organization", "geek-programming-books", "643e0bd", false);
+</script>
+</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h3><p>记录下遇到的坑 不然就忘了😂</p>
+<h4 id="只带cookie-无法下载"><a href="#只带cookie-无法下载" class="headerlink" title="只带cookie 无法下载"></a>只带cookie 无法下载</h4><p>本来以为只要带着登录之后的cookie请求下载的地址(eg:<a href="https://www.geekbooks.me/books/56/48/c1955c13518f994167b11f7b7279/amazon_ec2_cookbook.pdf" target="_blank" rel="external">https://www.geekbooks.me/books/56/48/c1955c13518f994167b11f7b7279/amazon_ec2_cookbook.pdf</a>) 就可以下载了，不过发现下下来的并不是书，而是网站上书的详情页的html。受到博客<a href="http://www.jianshu.com/p/c3dbf8294c33" target="_blank" rel="external">Course抓站小结</a> 的启发，又研究了一下请求的header。<br><img src="https://pic.yupoo.com/jiananshi/9f051e45/e02296fc.jpg" alt="header"><br>发现除了要带cookie之外，还要带有user_agent和Referer，refer是表示从哪个页面访问当前链接。<br>所以修改了下代码，在请求头中加入user-agent和referer之后，问题就解决了,部分代码如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cookie = cookielib.MozillaCookieJar()</div><div class="line"><span class="comment"># get cookie from file</span></div><div class="line">cookie.load(<span class="string">'../data/cookie4geek.data'</span>, ignore_discard=<span class="keyword">True</span>, ignore_expires=<span class="keyword">True</span>)</div><div class="line">handler = urllib2.HTTPCookieProcessor(cookie)</div><div class="line">opener = urllib2.build_opener(handler)</div><div class="line"><span class="comment"># add header</span></div><div class="line">opener.addheaders = [(<span class="string">'User-agent'</span>, <span class="string">'Mozilla/5.0'</span>), (<span class="string">"Referer"</span>, url)]</div></pre></td></tr></table></figure></p>
+<h4 id="下载文件的时候不显示进度"><a href="#下载文件的时候不显示进度" class="headerlink" title="下载文件的时候不显示进度"></a>下载文件的时候不显示进度</h4><p>可以下载文件之后，希望可以在下载文件的时候显示下载进度，让我们知道他在工作。。。。直接在stackoverflow上抄了段代码，这个问题也愉快的解决了。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">u = opener.open(<span class="string">"https://www.geekbooks.me"</span> + url)</div><div class="line"><span class="keyword">print</span> <span class="string">"Preparing to download..."</span></div><div class="line"><span class="comment"># f with directory</span></div><div class="line"><span class="keyword">if</span> os.path.exists(conf_books_dir + category + <span class="string">"/"</span> + file_name) <span class="keyword">and</span> detect_book(</div><div class="line">        (conf_books_dir + category + <span class="string">"/"</span> + file_name)):</div><div class="line">    <span class="keyword">continue</span></div><div class="line">f = open(conf_books_dir + category + <span class="string">"/"</span> + file_name, <span class="string">'wb'</span>)</div><div class="line">meta = u.info()</div><div class="line">file_size = int(meta.getheaders(<span class="string">"Content-Length"</span>)[<span class="number">0</span>])</div><div class="line"><span class="keyword">print</span> <span class="string">"Downloading: %s Bytes: %s"</span> % (file_name, file_size)</div><div class="line">file_size_dl = <span class="number">0</span></div><div class="line">block_sz = <span class="number">8192</span></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    buffer = u.read(block_sz)</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> buffer:</div><div class="line">        <span class="keyword">break</span></div><div class="line">    file_size_dl += len(buffer)</div><div class="line">    f.write(buffer)</div><div class="line">    status = <span class="string">r"%10d  [%3.2f%%]"</span> % (file_size_dl, file_size_dl * <span class="number">100.</span> / file_size)</div><div class="line">    status = status + chr(<span class="number">8</span>) * (len(status) + <span class="number">1</span>)</div><div class="line">    <span class="keyword">print</span> status,</div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
+<h4 id="一本一本下载速度太慢"><a href="#一本一本下载速度太慢" class="headerlink" title="一本一本下载速度太慢"></a>一本一本下载速度太慢</h4><p>这个只能果断上多线程了。。。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">download_work</span><span class="params">()</span>:</span></div><div class="line">    f = open(<span class="string">"../data/detailurl.txt"</span>, <span class="string">"r"</span>)</div><div class="line">    books = []</div><div class="line">    destDir = <span class="string">""</span></div><div class="line">    tmp = <span class="string">""</span></div><div class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> (line.strip()).startswith(<span class="string">"/"</span>):</div><div class="line">            tmp += <span class="string">"/"</span> + line.strip()</div><div class="line">            destDir = tmp</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="comment"># desDir</span></div><div class="line">            book = Book(destDir, line.strip())</div><div class="line">            books.append(book)</div><div class="line">            tmp = <span class="string">""</span></div><div class="line">    pool = threadpool.ThreadPool(conf_thread_count)</div><div class="line">    reqs = threadpool.makeRequests(<span class="keyword">lambda</span> book: book.download(), books)</div><div class="line">    [pool.putRequest(req) <span class="keyword">for</span> req <span class="keyword">in</span> reqs]</div><div class="line">    pool.wait()</div></pre></td></tr></table></figure></p>
+<h4 id="无法展示下载书的具体信息"><a href="#无法展示下载书的具体信息" class="headerlink" title="无法展示下载书的具体信息"></a>无法展示下载书的具体信息</h4><p>除了将书下载下来，还想将书的一些基本信息保存下来，比如:作者，简洁，出版年份，封面，标签等等。。最好可以根据作者，题目进行搜索。本来想自己写个网站出来，但是又没有时间。还好之前学叔推荐过django，用django搭个管理后台简直不要太方便好么，配置nginx，supervisor的时间都比写代码的时间长👅，还可以很方便定义想搜索的字段和想展示的字段。样式是丑了一丢丢，但自己用也无所谓。</p>
+<h3 id="成品"><a href="#成品" class="headerlink" title="成品"></a>成品</h3><p><img src="https://pic.yupoo.com/jiananshi/4ba0fe5c/acd3be91.jpg" alt="admin"></p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>依靠空闲时间可以做点想做的事，也是蛮好的~~。用python写脚本真的很方便，基本不用自己造轮子，用它自带的模块就可以完成了。用django搭管理后台也是快的不要不要的。一周多的时间换4000+的书很值啊，但是。。。。服务器+存储平均一天的成本就要10块。。。是不是得想个法子，看能不能用这些电子书挣点钱啊。。。。想到这。。。突然没那么开心了。。。<br><img src="https://pic.yupoo.com/jiananshi/f699826c/e1837167.jpg" alt="lingluan"></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yemengying.com/2016/01/09/拥有自己的图书小金库/" data-id="cjtvbucju004nz15sfbmpzjzh" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+        <a href="http://yemengying.com/2016/01/09/拥有自己的图书小金库/#comments" class="article-comment-link disqus-comment-count" data-disqus-url="http://yemengying.com/2016/01/09/拥有自己的图书小金库/">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2016/01/19/最近看的书/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    最近看的书
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2015/12/24/读书笔记-Linux-Bible-9th-Edition之进程大法好/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">读书笔记-Linux Bible 9th Edition之进程大法好</div>
+        </a>
+    
+</nav>
+
+
+    
+    <script>
+   DisqusJS.getArticleComments();
+   </script>
+</article>
+
+
+    
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+</section>
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 Mengying Ye<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        </div>
+    </div>
+</footer>
+        
+    
+   <script>
+   DisqusJS.getRecentComments(document.querySelector('#disqus-recent-comments'));
+   </script>
+
+
+
+    
+        <script src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+    
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
